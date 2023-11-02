@@ -1,0 +1,71 @@
+Steps
+
+1. Identify unique store from file 1
+2. Run operations for each individual store id
+3. 
+
+Reports table
+Cols:file:///home/shivanshu/Desktop/learning/store-uptime-monitoring/files/store%20status.csv
+
+    report_id PK varchar
+    status ENUM
+    path varchar 255
+    created_at
+    updated_at
+
+stores = select distinct(store_id) from store_status
+for each store
+    INFO: fetch store operational time and timezone info
+        operational_hours {
+            "0": [
+                {
+                    "start_time": "<time>",
+                    "end_time": "<time>"
+                },
+                {
+                    "start_time": "<time>",
+                    "end_time": "<time>"
+                }
+            ]}
+            select day, start_time, end_time from operation_time where store_id = "<store_id>"
+        timezone
+            select timezone from timezone_info where store_id = "<store_id>"   
+    fetch store statuses with given timezone;
+            select timestamp_utc at time zone 'utc' at time zone "<timezone>", status \
+            from store_status order by timestamp_utc;
+            [{timestamp: tmstmp, status: status}, ]
+    compute:
+        last hour
+        last 24 hours
+        last 7 days
+    compute logic:
+        
+
+    functions:
+        get_report
+        get_store_report(store_id)
+            
+
+class Store:
+    def __init__(self, store_id):
+        self.store_id = store_id
+        self._set_store_operation_time()
+        self._set_store_timezone()
+
+    def _set_store_operation_time(self):
+        self.operation_time = database.get_store_operation_time(self.store_id)
+    
+    def _set_store_timezone(self):
+        self.local_timezone = database.get_local_timezone(self.store_id)
+    
+    def _set_store_status(self):
+        self.store_status = database.get_store_status(self.store_id)
+
+
+1-4
+2 up
+3 down
+5 up 
+7 down
+8-11
+9 up
